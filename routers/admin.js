@@ -13,4 +13,6 @@ router.get("/add-nft", adminController.getAddNft);
 
 router.post("/add-nft", adminController.postAddNft);
 
+router.post("/delete-nft", adminController.postDeleteNft);
+
 module.exports = router;
