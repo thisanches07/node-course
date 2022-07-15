@@ -4,6 +4,7 @@ const Nft = require("../models/nft");
 const errorController = require("./error");
 
 exports.getNfts = (req, res, next) => {
+  console.log("isLoggedIn = " + req.session.isLoggedIn);
   Nft.findAll()
     .then((nfts) => {
       res.render("nft/index", {

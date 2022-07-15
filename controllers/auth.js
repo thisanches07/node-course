@@ -11,19 +11,15 @@ exports.getLogin = (req, res, next) => {
 exports.postLogin = (req, res, next) => {
   User.findByPk("1")
     .then((user) => {
-      console.log("user: ", user);
-      req.session.teste = true;
+      console.log("user: " + user.name);
       req.session.isLoggedIn = true;
+      console.log(
+        "colocando req.session.isLoggedIn como: " + req.session.isLoggedIn
+      );
       req.session.user = user;
       req.session.save((err) => {
         console.log(err);
-        res.redirect("/");
       });
-    })
-    .then(() => {
-      console.log("Passando por aqui");
-      res.setHeader("Set-Cookie", "exemploDeCookie=true");
-      next();
     })
     .catch((err) => console.log(err));
 };

@@ -1,8 +1,7 @@
 const Nft = require("../models/nft");
 
 exports.getNfts = (req, res, next) => {
-  req.user
-    .getNfts()
+  Nft.findAll()
     .then((products) => {
       res.render("admin/adminNfts", {
         prods: products,

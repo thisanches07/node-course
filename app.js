@@ -25,6 +25,13 @@ const options = {
 };
 const sessionStore = new mysqlStore(options);
 
+const errorController = require("./controllers/error");
+const adminRoutes = require("./routers/admin.js");
+const nftRoutes = require("./routers/nft.js");
+const authRoutes = require("./routers/auth.js");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     name: process.env.SESS_NAME,
@@ -38,19 +45,15 @@ app.use(
   })
 );
 
-const errorController = require("./controllers/error");
-const adminRoutes = require("./routers/admin.js");
-const nftRoutes = require("./routers/nft.js");
-const authRoutes = require("./routers/auth.js");
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
-
 app.use((req, res, next) => {
-  console.log("======================================");
-  User.findByPk(1)
+  if (!req.session.user) {
+    console.log("pulando...");
+    return next();
+  }
+  console.log(" ID == " + req.session.user._id);
+  User.findByPk(req.session.user._id)
     .then((user) => {
-      console.log(user);
+      console.log("encontrou");
       req.user = user;
       next();
     })
@@ -68,12 +71,12 @@ User.hasMany(Nft);
 sequelize
   .sync()
   .then((result) => {
-    User.findByPk(1);
+    return User.findOne({ where: { email: "thi.sanches@hotmail.com" } });
   })
   .then((user) => {
-    if (user) {
+    if (!user) {
       console.log("================");
-      console.log("CRIANDO NOVO USUÁRIO, user com id = 1 nao encontrado");
+      console.log("CRIANDO NOVO USUÁRIO, user com email nao encontrado");
       console.log("================");
       return User.create({ name: "Thiago", email: "test@test.com" });
     }
