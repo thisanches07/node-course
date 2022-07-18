@@ -22,6 +22,37 @@ exports.postLogin = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Signup",
+    isAuthenticated: false,
+  });
+};
+
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  User.findOne({ where: { email: req.body.email } })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+      const user = new User({
+        email: email,
+        password: password,
+      });
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);

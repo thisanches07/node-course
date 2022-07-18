@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
+    key: "userId",
     resave: false,
     saveUninitialized: false,
     secret: "secret",
