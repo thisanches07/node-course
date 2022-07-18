@@ -9,7 +9,7 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findByPk("1")
+  User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       console.log("user: " + user.name);
       req.session.isLoggedIn = true;
@@ -17,9 +17,7 @@ exports.postLogin = (req, res, next) => {
         "colocando req.session.isLoggedIn como: " + req.session.isLoggedIn
       );
       req.session.user = user;
-      req.session.save((err) => {
-        console.log(err);
-      });
+      res.redirect("/nfts");
     })
     .catch((err) => console.log(err));
 };
