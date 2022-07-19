@@ -3,6 +3,8 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const sequelize = require("./utils/database");
 const User = require("./models/user");
@@ -18,6 +20,9 @@ const adminRoutes = require("./routers/admin.js");
 const nftRoutes = require("./routers/nft.js");
 const authRoutes = require("./routers/auth.js");
 
+const csrfProtection = csrf();
+
+app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
@@ -31,6 +36,8 @@ app.use(
     },
   })
 );
+
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -47,6 +54,11 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 app.use("/admin", adminRoutes);
 app.use("/nfts", nftRoutes);
 app.use(authRoutes);

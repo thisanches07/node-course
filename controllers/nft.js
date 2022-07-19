@@ -1,4 +1,3 @@
-const { json } = require("express");
 const Nft = require("../models/nft");
 
 const errorController = require("./error");
@@ -8,10 +7,10 @@ exports.getNfts = (req, res, next) => {
   Nft.findAll()
     .then((nfts) => {
       res.render("nft/index", {
+        csrfToken: req.csrfToken(),
         prods: nfts,
         pageTitle: "Nfts",
         path: "/",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -30,7 +29,6 @@ exports.getNftById = (req, res, next) => {
         nft: nft,
         pageTitle: nft.name,
         path: "/nft",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {

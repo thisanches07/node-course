@@ -7,7 +7,6 @@ exports.getNfts = (req, res, next) => {
         prods: products,
         pageTitle: "Admin Nfts",
         path: "/admin/nfts",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
@@ -18,7 +17,6 @@ exports.getAddNft = (req, res, next) => {
     pageTitle: "Add Nft",
     path: "/admin/add-nft",
     editing: false,
-    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
